@@ -1,0 +1,26 @@
+=== Question 1 ===
+#Answer below
+An object is hashable if it has a hash value that never changes during its lifetime and it can be compared to other objects for equality. Python calls hash() on an object to turn it into an integer, and a dictionary uses that integer to decide where to store the key and where to find it again.
+Immutable types such as integers, strings and tuples (that only contain hashable items) are hashable because their contents cannot change, so their hash value stays the same.
+Mutable types such as lists, dictionaries and sets are not hashable because their contents can change. If a list were used as a key and then changed, its hash would change and the dictionary would no longer be able to find the entry.
+eg. valid: grid = {(2, 3): "tree"}   invalid: grid = {[2, 3]: "tree"} which raises TypeError: unhashable type: 'list'
+A tuple key is useful when a single value is not enough to identify an item, for example a map or game board where each square is identified by its (row, column) position. grid[(2, 3)] gives the contents of that square directly, without searching through a list.
+
+=== Question 2 ===
+#Answer below
+A list stores items one after the other in order. To check whether a learner number is in a list, Python has to compare it with each item from the start until it finds a match, or reaches the end if it is not there. This is O(n), so if the data grows ten times bigger the check takes roughly ten times longer.
+A set stores only unique items and uses a hash table. The hash of the value tells Python where to look, so it can go almost straight to the right place instead of searching through everything. This makes membership checking O(1) on average, and it stays fast even when there are hundreds of thousands of records.
+A dictionary also uses a hash table, but it stores key:value pairs. Checking whether a key is in a dictionary is also O(1) on average. It is the right choice when each learner number must be linked to extra information, such as the learner's name or class. If only the check is needed, a set is simpler because there are no values to store.
+For this program a set (or dictionary) is the best choice, because the main job is repeated membership checks on a very large collection. A list would only be suitable for small amounts of data, or when order and duplicates matter.
+
+=== Question 3 ===
+#Answer below
+The data structure must keep the order in which the jobs arrived (first in, first out), because the first job submitted must be the first one printed.
+It must allow duplicates, because the same document can be submitted more than once and each submission is a separate job.
+It must be mutable, because jobs are added at the end and removed from the front all the time.
+It should be efficient at adding to one end and removing from the other end.
+A list meets the first three requirements. append() adds a job to the end and pop(0) removes the job at the front. However, pop(0) has to shift every remaining item one position forward, which is O(n) and becomes slow for a long queue.
+The best structure is collections.deque, which is built for queues. append() and popleft() are both O(1), and it keeps order and allows duplicates.
+A set is not appropriate because it does not keep order and removes duplicates, so repeated submissions would be lost.
+A dictionary is not appropriate because the jobs do not need to be looked up by a key, and its purpose is pairing keys with values rather than managing the order of a queue.
+A tuple is not appropriate because it is immutable, so jobs could not be added or removed without creating a new tuple every time.
